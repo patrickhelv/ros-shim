@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package service;
+
+option go_package = "protoexport/service";
+
+service RosShimService {
+    rpc GetLogs(LaunchFile) returns (LogInfo);
+
+    rpc GetAmountOfChilds(Empty) returns (ChildAmount);
+    rpc GetChildPids(Empty) returns (ChildPidsResponse);
+
+    rpc StartService(StartParams) returns (StatusResponse);
+    rpc StopRosNode(LaunchFile) returns (StatusResponse);
+    rpc RestartService(StartParams) returns (StatusResponse);
+
+    rpc CheckHealth(Empty) returns (HealthResponse);
+    rpc CheckHealthRosNode(LaunchFile) returns (HealthResponse);
+    rpc CheckHealthRosNodes(Empty) returns (HealthResponses);
+
+    rpc CheckTaskStatus(TaskStatus) returns (StatusResponse);
+
+    rpc Register(Secret) returns(StatusResponse);
+    rpc DeRegister(Empty) returns(StatusResponse);
+    rpc RestartRos2Shim(Secret) returns (StatusResponse);
+
+    rpc GetSystemUtilization(Empty) returns(DataUtilizationSystem);
+    rpc GetRosNodeUtilization(LaunchFile) returns(DataUtilizationRosNode);
+    rpc CheckPidVerification(CheckPids) returns(PidVerifications);
+    rpc Shutdown(Secret) returns(StatusResponse);
+}
+
+message Secret{
+    string message = 1;
+}
+
+message ChildPids{
+    string key = 1;
+    int32 pid = 2;
+}
+
+message ChildPidsResponse {
+    repeated ChildPids Pids = 1;
+}
+
+message ChildAmount{
+    int32 pids = 1;
+}
+
+message LaunchFile{
+    string launchFileName = 1;
+}
+
+message StartParams{
+    string gitUrl = 1;
+    string gitBranch = 2;
+    string workpackage = 3;
+    string rosProjectName = 4;
+    string launchFileName = 5;
+    bool venvRequired = 6;
+}
+
+message StatusResponse{
+    bool success = 1;
+    string message = 2;
+}
+
+message Empty {}
+
+message HealthResponse{
+    bool healthy = 1;
+    int64 uptime_seconds = 2;
+}
+
+message HealthResponseRosNode{
+    bool healthy = 1;
+    string launchfile = 2;
+    int64 uptime_seconds = 3;
+}
+
+message LogInfo{
+    string launchfile = 1;
+    repeated string message = 2;
+}
+
+message HealthResponses{
+    repeated HealthResponseRosNode healthResponseRosNode = 1;
+}
+
+message TaskStatus{
+    string taskId = 1;
+}
+
+message DataUtilizationSystem{
+    string cpuPercent = 1;
+    string vmemPercent = 2;
+}
+
+message DataUtilizationRosNode{
+    string cpuPercent = 1;
+    string cpuUsage = 2;
+    string memUsagePercent = 3;
+}
+
+message PidLaunchfileInfo{
+    string pids = 1;
+    string launchfile = 2;
+}
+
+message CheckPids{
+    repeated PidLaunchfileInfo pidLaunchfileInfo = 1;
+}
+
+message Pidstates{
+    string pid = 1;
+    string state = 2;
+}
+
+message PidVerifications{
+    repeated Pidstates pidstates = 1;
+}

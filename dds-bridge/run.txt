@@ -1,0 +1,1 @@
+python3 ros2bridge.py --topic /processed_image_topic --endpoint http://IP:3002/api/upload_image

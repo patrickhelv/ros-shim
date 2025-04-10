@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "protoexport/auth";
+
+service registerRosShim{
+    rpc Register(Secret) returns (PortInfo);
+}
+
+message Secret{
+    string message = 1;
+    string dns = 2;
+}
+
+message PortInfo {
+    bool success = 1;
+    string port = 2;
+}
